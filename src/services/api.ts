@@ -1,7 +1,3 @@
-export const api = {
-    get: (url: string) => fetch(url),
-    post: (url: string, body: object) => fetch(url, {
-        body: JSON.stringify(body)
-    })
-}
+import axios from "axios";
 
+export const api = axios.create();
