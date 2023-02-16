@@ -12,13 +12,14 @@ export interface ITagsProps extends ComponentProps<typeof HStack> {
 
 export const Tags = ({ data, ...props }: ITagsProps) => {
     return (<>{
-        data.map(({ icon, name }) => {
+        data.map(({ icon, name }, key) => {
             if (!name) {
                 return null;
             };
 
             return (
                 <HStack
+                    key={key}
                     backgroundColor="blackAlpha.200"
                     padding={4}
                     rounded={8}
