@@ -1,52 +1,54 @@
 //Modules
-import { api } from "../../services/api";
-import { useQuery } from "react-query";
 import getContrastByColor from "../../utils/getContrastByColor";
+import { LanguagesColors } from "../../model/LanguagesColorsModel";
+import { IRepositoriesProps } from "../../model/RepositoriesModel";
 
 //Components
 import { Box } from "../Box";
+import { Loading } from "../Layout/Loading";
 import { Book, Star } from "react-feather";
-import { Grid, Heading, HStack, Link, Spacer, Text } from "@chakra-ui/react";
+import { Grid, Heading, HStack, Link, Spacer, Stack, Text } from "@chakra-ui/react";
 
 export interface IReposProps {
-    data?: ReposDataProps[],
-    user: string
+    data?: IRepositoriesProps[],
+    user: string,
+    languagesColors: LanguagesColors | undefined,
+    limit?: number,
+    isFetching?: boolean
 };
 
-export type ReposDataProps = {
-    id: string | number,
-    name: string,
-    description: String,
-    language: string,
-    stargazers_count: number,
-    html_url: string
-};
-
-type Languages = {
-    [key: string]: {
-        color: string
-    };
-};
-
-export const Repositories = ({ data, user }: IReposProps) => {
-    const repos = data;
-    const languagesURL = "https://raw.githubusercontent.com/ozh/github-colors/master/colors.json";
-    const {
-        data: languages
-    } = useQuery<Languages>({
-        queryKey: "languages",
-        queryFn: async () => (await api.get(languagesURL)).data
-    });
+export const Repositories = ({
+    data, user, languagesColors, limit = Infinity, isFetching
+}: IReposProps) => {
+    const repos = data?.slice(0, limit);
 
     const getColorByLanguage = (key: string | null) => {
-        if (!languages || !key) {
+        if (!languagesColors || !key) {
             return;
         };
 
-        return languages[key].color;
+        return languagesColors[key].color;
     };
 
     const allRepositoriesURL = `https://github.com/${user}?tab=repositories`;
+
+    if (isFetching) {
+        return <Loading />
+    };
+
+    if (!repos || repos.length == 0) {
+        return (
+            <Stack
+                justifyContent="center"
+                alignItems="center"
+            >
+                <Text
+                    color="gray"
+                    fontSize="sm"
+                >No repository for now.</Text>
+            </Stack>
+        )
+    };
 
     return (
         <>
@@ -54,7 +56,11 @@ export const Repositories = ({ data, user }: IReposProps) => {
                 gap={2}
                 templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)']}
             >
-                {repos?.map((repo, key) => {
+                {repos.map((repo, key) => {
+                    if (!repo) {
+                        return;
+                    };
+
                     const {
                         id,
                         name,
