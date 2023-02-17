@@ -64,7 +64,7 @@ export const SignIn = ({ onSubmit }: ISignInProps) => {
                     width="full"
                     colorScheme="green"
                     onClick={handleSubmit}
-                >Entrar</Button>
+                >Enter</Button>
             </Stack>
             <Divider
                 maxWidth="50%"
