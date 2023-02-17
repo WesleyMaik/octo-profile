@@ -1,8 +1,14 @@
-import { Button, Divider, Heading, Stack } from "@chakra-ui/react";
+//Modules
 import { useRef } from "react";
+
+//Components
+import OctoLogo from "../../assets/octocat.png";
+import { Input } from "../Input";
 import { GitHub } from "react-feather";
 import { Footer } from "../Footer";
-import { Input } from "../Input";
+import { motion } from "framer-motion";
+import { Affiliations } from "../Layout/Affiliations";
+import { Button, Divider, Heading, Stack } from "@chakra-ui/react";
 
 interface ISignInProps {
     onSubmit?: (username: string) => void
@@ -13,7 +19,7 @@ export const SignIn = ({ onSubmit }: ISignInProps) => {
 
     const handleSubmit = () => {
         const value = inputRef.current?.value || "";
-        if (onSubmit) onSubmit(value);
+        if (onSubmit && value) onSubmit(value);
     };
 
     return (
@@ -29,13 +35,24 @@ export const SignIn = ({ onSubmit }: ISignInProps) => {
                 alignItems="center"
                 padding={4}
             >
-                <Heading>Octo Profile</Heading>
-                <Divider
-                    marginY={2}
+                <motion.img
+                    src={OctoLogo}
+                    width={150}
+                    height={150}
+                    alt="Octocat Logo"
+                    animate={{
+                        rotate: [-20, 20, -20]
+                    }}
+                    transition={{
+                        duration: 2,
+                        ease: "easeInOut",
+                        repeat: Infinity,
+                    }}
                 />
+                <Heading>Octo Profile</Heading>
                 <Input
                     ref={inputRef}
-                    placeholder="Insira seu nome de usuário"
+                    placeholder="Enter your GitHub username"
                     leftAddon={<GitHub size={24} />}
                     onKeyDown={({ key }) => {
                         if (key == "Enter") {
@@ -49,6 +66,11 @@ export const SignIn = ({ onSubmit }: ISignInProps) => {
                     onClick={handleSubmit}
                 >Entrar</Button>
             </Stack>
+            <Divider
+                maxWidth="50%"
+                paddingY={4}
+            />
+            <Affiliations />
             <Footer />
         </Stack>
     );
