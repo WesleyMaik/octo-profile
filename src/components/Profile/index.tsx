@@ -19,6 +19,7 @@ import { Affiliations } from "../Layout/Affiliations";
 import { Coffee, MapPin } from "react-feather";
 import { RateLimitExceeded } from "../Layout/RateLimitExceeded";
 import { Heading, HStack, Image, Link, Stack, Text } from "@chakra-ui/react"
+import { UserSkeleton } from "../Layout/UserSkeleton";
 
 interface IProfileProps {
     username: string
@@ -77,7 +78,11 @@ export const Profile = ({ username }: IProfileProps) => {
         return <Loading />
     };
 
-    if (!user || error) {
+    if (!user) {
+        return <UserSkeleton />
+    };
+
+    if (error) {
         return <NotFoundUser />;
     };
 
