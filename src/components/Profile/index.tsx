@@ -46,7 +46,8 @@ export const Profile = ({ username }: IProfileProps) => {
     const {
         data: user,
         isFetching,
-        error
+        error,
+        status
     } = useQuery<IUserProps>({
         queryKey: "user",
         queryFn: () => User.request(username),
@@ -78,12 +79,12 @@ export const Profile = ({ username }: IProfileProps) => {
         return <Loading />
     };
 
-    if (!user) {
-        return <UserSkeleton />
+    if (error || status == 'error') {
+        return <NotFoundUser />;
     };
 
-    if (error) {
-        return <NotFoundUser />;
+    if (!user) {
+        return <UserSkeleton />
     };
 
     const {
